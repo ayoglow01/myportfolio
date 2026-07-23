@@ -1,0 +1,16 @@
+{
+  "name": "Ayomide Akinola — Software Developer",
+  "short_name": "Ayoglow",
+  "description": "Professional portfolio of Ayomide Akinola, a Software Developer specializing in modern web applications.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#020617",
+  "theme_color": "#2563EB",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}
