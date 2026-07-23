@@ -24,7 +24,7 @@ export default function Home() {
       <SEO
         canonical="/"
         title={null}
-        description="Portfolio of Ayomide Emmanuel — a Software Developer specializing in React, JavaScript, and modern web technologies. Explore my projects, skills, and experience."
+        description="Portfolio of Ayomide Akinola — a Software Developer specializing in React, JavaScript, and modern web technologies. Explore my projects, skills, and experience."
       />
       <Hero />
       <Suspense fallback={<SectionFallback />}>

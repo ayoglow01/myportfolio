@@ -153,7 +153,7 @@ function Footer() {
         {/* Bottom */}
         <div className="border-t dark:border-border border-border-light py-5 sm:py-6 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-xs sm:text-sm dark:text-muted text-muted-light text-center sm:text-left">
-            © {currentYear} Ayomide Emmanuel. All rights reserved.
+            © {currentYear} Ayomide Akinola. All rights reserved.
           </p>
         </div>
       </Container>
