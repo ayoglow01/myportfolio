@@ -53,15 +53,15 @@ function Contact() {
         // Dynamic import to avoid loading EmailJS unless needed
         const emailjs = await import("@emailjs/browser");
         await emailjs.send(
-          "YOUR_SERVICE_ID",
-          "YOUR_TEMPLATE_ID",
+          "service_uezj9va",
+          "template_f8woytf",
           {
             from_name: form.name,
             from_email: form.email,
             subject: form.subject,
             message: form.message,
           },
-          "YOUR_PUBLIC_KEY",
+          "3Qu_MxuDDCFMLo9f6",
         );
         setStatus("success");
         setForm(initialForm);

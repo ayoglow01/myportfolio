@@ -11,10 +11,7 @@ export const projects = [
 
     image: "/images/projects/millad.jpg",
 
-    gallery: [
-      "/images/projects/millad-m.jpg",
-      "/images/projects/millad-s.jpg",
-    ],
+    gallery: ["/images/projects/millad-m.jpg", "/images/projects/millad-s.jpg"],
 
     category: "Frontend",
 
@@ -106,9 +103,20 @@ export const projects = [
     ],
 
     technologies: [
-      // Edit later
+      "React",
+      "Vite",
+      "Tailwind CSS",
+      "JavaScript",
+      "React Router",
+      "Supabase",
+      "PostgreSQL",
+      "Zod",
+      "Sentry",
+      "PWA",
+      "Git",
+      "GitHub",
+      "Vercel",
     ],
-
     challenges:
       "Designing authentication flows, user data organization, and scalable project architecture while preparing for future production deployment.",
 
@@ -164,9 +172,7 @@ export const projects = [
       "Performance optimization",
     ],
 
-    technologies: [
-      // Edit later
-    ],
+    technologies: ["HTML5", "CSS3", "JavaScript", "React", "Git", "GitHub"],
 
     challenges:
       "Maintaining consistency across different screen sizes while ensuring a smooth user experience.",
@@ -224,9 +230,7 @@ export const projects = [
       "Fast navigation",
     ],
 
-    technologies: [
-      // Edit later
-    ],
+    technologies: ["HTML5", "CSS3", "JavaScript", "Git", "GitHub"],
 
     challenges:
       "Creating layouts that remain visually balanced regardless of content length and screen size.",
@@ -258,9 +262,7 @@ export const projects = [
 
     image: "/images/projects/portfolio.jpg",
 
-    gallery: [
-      "/images/projects/portfolio.jpg",
-    ],
+    gallery: ["/images/projects/portfolio.jpg"],
 
     category: "Frontend",
 
@@ -286,7 +288,14 @@ export const projects = [
     ],
 
     technologies: [
-      // Edit later
+      "React",
+      "Vite",
+      "JavaScript",
+      "Tailwind CSS",
+      "Framer Motion",
+      "React Router",
+      "EmailJS",
+      "GitHub",
     ],
 
     challenges:
@@ -317,9 +326,7 @@ export const projects = [
 
     image: "/images/projects/ai_data.jpg",
 
-    gallery: [
-      "/images/projects/ai_data.jpg",
-    ],
+    gallery: ["/images/projects/ai_data.jpg"],
 
     category: "AI Automation",
 
@@ -342,9 +349,7 @@ export const projects = [
       "Structured workflow",
     ],
 
-    technologies: [
-      // Edit later
-    ],
+    technologies: ["Python", "Streamlit", "CrewAI"],
 
     challenges:
       "Designing reliable communication between AI agents while ensuring consistent output quality required careful prompt engineering and workflow design.",
@@ -376,9 +381,7 @@ export const projects = [
 
     image: "/images/projects/tone_adaptive.jpg",
 
-    gallery: [
-      "/images/projects/tone_adaptive.jpg",
-    ],
+    gallery: ["/images/projects/tone_adaptive.jpg"],
 
     category: "AI Automation",
 
@@ -400,9 +403,7 @@ export const projects = [
       "AI-powered rewriting",
     ],
 
-    technologies: [
-      // Edit later
-    ],
+    technologies: ["Python", "Streamlit", "CrewAI"],
 
     challenges:
       "Ensuring the generated text preserved its original meaning while producing natural, high-quality responses across different tones.",
@@ -434,10 +435,7 @@ export const projects = [
 
     image: "/images/projects/fylo.jpg",
 
-    gallery: [
-      "/images/projects/fylo-1.jpg",
-      "/images/projects/fylo-3.jpg",
-    ],
+    gallery: ["/images/projects/fylo-1.jpg", "/images/projects/fylo-3.jpg"],
 
     category: "Frontend",
 
@@ -459,9 +457,7 @@ export const projects = [
       "Accessible interface",
     ],
 
-    technologies: [
-      // Edit later
-    ],
+    technologies: ["HTML5", "CSS3", "JavaScript", "Git", "GitHub"],
 
     challenges:
       "Recreating the design accurately while maintaining responsiveness across different devices.",
@@ -518,9 +514,7 @@ export const projects = [
       "Interactive navigation",
     ],
 
-    technologies: [
-      // Edit later
-    ],
+    technologies: ["HTML5", "CSS3", "JavaScript", "Git", "GitHub", "Bootstrap"],
 
     challenges:
       "Creating visually appealing layouts while maintaining simplicity and performance.",
@@ -552,9 +546,7 @@ export const projects = [
 
     image: "/images/projects/captcha.jpg",
 
-    gallery: [
-      "/images/projects/captcha.jpg",
-    ],
+    gallery: ["/images/projects/captcha.jpg"],
 
     category: "Frontend",
 
@@ -576,9 +568,7 @@ export const projects = [
       "Interactive feedback",
     ],
 
-    technologies: [
-      // Edit later
-    ],
+    technologies: ["HTML5", "CSS3", "JavaScript", "Git", "GitHub"],
 
     challenges:
       "Generating unpredictable CAPTCHA values while keeping the implementation lightweight and user-friendly.",

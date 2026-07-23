@@ -16,10 +16,12 @@ function Navbar() {
   const navigate = useNavigate();
   const isHome = location.pathname === "/";
 
+  // Close mobile menu on route change
   useEffect(() => {
     setMobileOpen(false);
   }, [location]);
 
+  // Lock body scroll when mobile menu is open
   useEffect(() => {
     if (mobileOpen) {
       document.body.style.overflow = "hidden";
@@ -31,6 +33,7 @@ function Navbar() {
     };
   }, [mobileOpen]);
 
+  // Track active section on homepage
   useEffect(() => {
     if (!isHome) {
       setActiveSection("");
@@ -45,7 +48,7 @@ function Navbar() {
           }
         });
       },
-      { rootMargin: "-40% 0px -40% 0px" }
+      { rootMargin: "-40% 0px -40% 0px" },
     );
 
     navLinks.forEach((link) => {
@@ -56,25 +59,28 @@ function Navbar() {
     return () => observer.disconnect();
   }, [isHome]);
 
+  // Handle navigation click
   const handleNavClick = useCallback(
     (link) => {
       setMobileOpen(false);
+
       if (isHome) {
         const el = document.getElementById(link.to);
         if (el) {
           el.scrollIntoView({ behavior: "smooth" });
         }
       } else {
-        navigate("/");
+        navigate("/", { replace: false });
+        // Wait for navigation then scroll
         setTimeout(() => {
           const el = document.getElementById(link.to);
           if (el) {
             el.scrollIntoView({ behavior: "smooth" });
           }
-        }, 300);
+        }, 150);
       }
     },
-    [isHome, navigate]
+    [isHome, navigate],
   );
 
   const isHidden = scrollDirection === "down" && scrollY > 100 && !mobileOpen;
@@ -87,6 +93,8 @@ function Navbar() {
       initial={{ y: -100 }}
       animate={{ y: isHidden ? -100 : 0 }}
       transition={{ duration: 0.3 }}
+      role="navigation"
+      aria-label="Main navigation"
     >
       <div
         className={`${
@@ -96,33 +104,37 @@ function Navbar() {
         } transition-all duration-300`}
       >
         <Container>
-          <div className="flex items-center justify-between h-16 md:h-20">
-            {/* Logo */}
+          <div className="flex items-center justify-between h-14 sm:h-16 md:h-20">
+            {/* Logo - Always links to home */}
             <Link
               to="/"
-              className="flex items-center gap-2 group"
-              aria-label="Home"
+              className="flex items-center gap-2 group shrink-0"
+              aria-label="Go to homepage"
             >
-                <img
-                className="w-9 h-9 rounded-lg bg-primary flex items-center justify-center text-white font-bold text-sm"
-                src="/favicon.svg" alt="img" />
-              <span class="hover:text-primary">
+              <img
+                src="/favicon.svg"
+                alt="Ayomide Logo"
+                className="w-9 h-9 rounded-lg object-cover transition-transform duration-300 group-hover:scale-105"
+              />
+
+              <span className="font-bold text-lg hover:text-primary transition-colors">
                 Ayomide<span className="text-primary">.</span>
               </span>
             </Link>
 
             {/* Desktop Navigation */}
-            <div className="hidden md:flex items-center gap-1">
+            <div className="hidden lg:flex items-center gap-1">
               {navLinks.map((link) => (
                 <button
                   key={link.to}
                   onClick={() => handleNavClick(link)}
-                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 cursor-pointer ${
+                  className={`px-3 xl:px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 cursor-pointer ${
                     activeSection === link.to
                       ? "text-primary bg-primary/10"
                       : "dark:text-muted text-muted-light hover:text-primary dark:hover:text-primary"
                   }`}
-                  aria-label={`Navigate to ${link.label}`}
+                  aria-label={`Navigate to ${link.label} section`}
+                  aria-current={activeSection === link.to ? "true" : undefined}
                 >
                   {link.label}
                 </button>
@@ -131,17 +143,25 @@ function Navbar() {
 
             {/* Actions */}
             <div className="flex items-center gap-2">
+              {/* Theme Toggle */}
               <button
                 onClick={toggleTheme}
-                className="w-10 h-10 rounded-xl dark:bg-surface bg-card-light border dark:border-border border-border-light flex items-center justify-center dark:text-muted text-muted-light hover:text-primary dark:hover:text-primary transition-all cursor-pointer"
-                aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
+                className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl dark:bg-surface bg-card-light border dark:border-border border-border-light flex items-center justify-center dark:text-muted text-muted-light hover:text-primary dark:hover:text-primary transition-all cursor-pointer"
+                aria-label={
+                  isDark ? "Switch to light mode" : "Switch to dark mode"
+                }
               >
-                {isDark ? <FiSun className="text-lg" /> : <FiMoon className="text-lg" />}
+                {isDark ? (
+                  <FiSun className="text-base sm:text-lg" />
+                ) : (
+                  <FiMoon className="text-base sm:text-lg" />
+                )}
               </button>
 
+              {/* Resume Button - Desktop */}
               <a
                 href={personalInfo.resumeUrl}
-                className="hidden md:inline-flex items-center gap-2 px-4 py-2 bg-primary hover:bg-primary-hover text-white rounded-xl text-sm font-semibold transition-all"
+                className="hidden lg:inline-flex items-center gap-2 px-4 py-2 bg-primary hover:bg-primary-hover text-white rounded-xl text-sm font-semibold transition-all"
                 aria-label="Download Resume"
               >
                 <FiDownload />
@@ -151,9 +171,10 @@ function Navbar() {
               {/* Mobile Menu Button */}
               <button
                 onClick={() => setMobileOpen(!mobileOpen)}
-                className="md:hidden w-10 h-10 rounded-xl dark:bg-surface bg-card-light border dark:border-border border-border-light flex items-center justify-center dark:text-text text-text-light cursor-pointer"
+                className="lg:hidden w-9 h-9 sm:w-10 sm:h-10 rounded-xl dark:bg-surface bg-card-light border dark:border-border border-border-light flex items-center justify-center dark:text-text text-text-light cursor-pointer"
                 aria-label={mobileOpen ? "Close menu" : "Open menu"}
                 aria-expanded={mobileOpen}
+                aria-controls="mobile-menu"
               >
                 <AnimatePresence mode="wait">
                   {mobileOpen ? (
@@ -164,7 +185,7 @@ function Navbar() {
                       exit={{ rotate: 90, opacity: 0 }}
                       transition={{ duration: 0.2 }}
                     >
-                      <FiX className="text-xl" />
+                      <FiX className="text-lg sm:text-xl" />
                     </motion.div>
                   ) : (
                     <motion.div
@@ -174,7 +195,7 @@ function Navbar() {
                       exit={{ rotate: -90, opacity: 0 }}
                       transition={{ duration: 0.2 }}
                     >
-                      <FiMenu className="text-xl" />
+                      <FiMenu className="text-lg sm:text-xl" />
                     </motion.div>
                   )}
                 </AnimatePresence>
@@ -188,22 +209,28 @@ function Navbar() {
       <AnimatePresence>
         {mobileOpen && (
           <>
+            {/* Backdrop */}
             <motion.div
-              className="fixed inset-0 bg-black/50 backdrop-blur-sm md:hidden"
+              className="fixed inset-0 bg-black/50 backdrop-blur-sm lg:hidden"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setMobileOpen(false)}
               aria-hidden="true"
             />
+            {/* Drawer */}
             <motion.div
-              className="fixed top-16 right-0 w-72 h-[calc(100dvh-4rem)] dark:bg-surface bg-surface-light border-l dark:border-border border-border-light md:hidden overflow-y-auto"
+              id="mobile-menu"
+              className="fixed top-14 sm:top-16 right-0 w-full xs:w-80 max-w-[calc(100vw-1rem)] h-[calc(100dvh-3.5rem)] sm:h-[calc(100dvh-4rem)] dark:bg-surface bg-surface-light border-l dark:border-border border-border-light lg:hidden overflow-y-auto"
               initial={{ x: "100%" }}
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
               transition={{ type: "spring", damping: 25, stiffness: 200 }}
+              role="dialog"
+              aria-modal="true"
+              aria-label="Mobile navigation menu"
             >
-              <div className="p-6 flex flex-col gap-2">
+              <div className="p-4 sm:p-6 flex flex-col gap-2">
                 {navLinks.map((link, idx) => (
                   <motion.button
                     key={link.to}
@@ -216,12 +243,28 @@ function Navbar() {
                     initial={{ opacity: 0, x: 20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: idx * 0.05 }}
-                    aria-label={`Navigate to ${link.label}`}
+                    aria-label={`Navigate to ${link.label} section`}
                   >
                     {link.label}
                   </motion.button>
                 ))}
 
+                {/* All Projects Link */}
+                <motion.div
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: navLinks.length * 0.05 }}
+                >
+                  <Link
+                    to="/projects"
+                    className="w-full text-left px-4 py-3 rounded-xl text-base font-medium dark:text-muted text-muted-light hover:text-primary hover:bg-primary/5 transition-all block"
+                    onClick={() => setMobileOpen(false)}
+                  >
+                    All Projects
+                  </Link>
+                </motion.div>
+
+                {/* Resume Button */}
                 <motion.a
                   href={personalInfo.resumeUrl}
                   className="mt-4 flex items-center justify-center gap-2 px-4 py-3 bg-primary hover:bg-primary-hover text-white rounded-xl text-base font-semibold transition-all"
