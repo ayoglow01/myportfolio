@@ -544,9 +544,9 @@ export const projects = [
     description:
       "Captcha Generator is a client-side security project that dynamically generates verification codes and validates user input before form submission.",
 
-    image: "/images/projects/captcha.jpg",
+    image: "/images/projects/capt-1.jpg",
 
-    gallery: ["/images/projects/captcha.jpg"],
+    gallery: ["/images/projects/capt-1.jpg"],
 
     category: "Frontend",
 
