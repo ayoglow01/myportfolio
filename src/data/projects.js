@@ -580,7 +580,7 @@ export const projects = [
 
     status: "Active",
 
-    liveDemo: "https://ayoglow01.github.io/Captcha/",
+    liveDemo: "https://captcha-five-plum.vercel.app/",
 
     year: "2025",
   },
