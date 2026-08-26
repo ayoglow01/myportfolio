@@ -124,9 +124,11 @@ function CVPasswordModal({ open, onClose }) {
 
         setStatus("success");
 
-        const downloaded = await downloadCV(result.token);
-        if (!downloaded) {
-          setErrorMessage(ERROR_MESSAGES.download);
+        const downloadResult = await downloadCV(result.token);
+        if (!downloadResult.ok) {
+          setErrorMessage(
+            downloadResult.error || ERROR_MESSAGES.download
+          );
           setStatus("error");
           return;
         }
@@ -151,7 +153,7 @@ function CVPasswordModal({ open, onClose }) {
   return (
     <AnimatePresence>
       {open && (
-        <div className="fixed inset-0 z-100 flex items-center justify-center p-4 sm:p-6 overflow-y-auto">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 overflow-y-auto">
           {/* Overlay */}
           <motion.div
             className="fixed inset-0 bg-black/60 backdrop-blur-sm"

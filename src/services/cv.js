@@ -42,22 +42,33 @@ export async function unlockCV(password) {
 
 /**
  * Exchange a short-lived token for the CV file and trigger a browser download.
- * The response is read as a blob so the token never enters browser history
- * as a navigated URL, and the CV is never addressable by a permanent link.
+ * Returns { ok: true } on success, or { ok: false, error: string } if server returned an error.
  */
 export async function downloadCV(token) {
   let res;
   try {
     res = await fetch(`/api/cv/download?token=${encodeURIComponent(token)}`);
   } catch {
-    return false;
+    return { ok: false, error: "Network error while downloading CV." };
   }
 
-  if (!res.ok) return false;
+  if (!res.ok) {
+    try {
+      const data = await res.json();
+      return {
+        ok: false,
+        error: data.error || `Server responded with status ${res.status}`,
+      };
+    } catch {
+      return { ok: false, error: `Failed to download CV (HTTP ${res.status}).` };
+    }
+  }
 
   try {
     const blob = await res.blob();
-    if (blob.size === 0) return false;
+    if (blob.size === 0) {
+      return { ok: false, error: "Received empty PDF file." };
+    }
 
     const objectUrl = URL.createObjectURL(blob);
     const anchor = document.createElement("a");
@@ -66,10 +77,9 @@ export async function downloadCV(token) {
     document.body.appendChild(anchor);
     anchor.click();
     anchor.remove();
-    // Defer revocation so the download has time to start
     setTimeout(() => URL.revokeObjectURL(objectUrl), 4000);
-    return true;
-  } catch {
-    return false;
+    return { ok: true };
+  } catch (err) {
+    return { ok: false, error: "Failed to save downloaded file." };
   }
 }

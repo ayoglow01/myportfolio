@@ -1,40 +1,17 @@
 // GET /api/cv/download?token=...
-// Verifies a short-lived token issued by /api/cv/unlock, then streams the
-// private CV file. The CV lives in /private (never in /public), so there
-// is NO public URL that can bypass authentication.
-import crypto from "node:crypto";
+// Verifies a short-lived token issued by /api/cv/unlock, then sends the
+// private CV file. The CV itself lives in /private (never in /public), so
+// there is NO public URL that can bypass authentication.
 import fs from "node:fs";
 import path from "node:path";
+import { fileURLToPath } from "node:url";
+import {
+  verifyToken,
+  applySecurityHeaders,
+} from "../lib/security.js";
 
-// ── Security helpers (inlined to avoid cross-file import issues with Vite) ──
-
-function safeCompare(a, b) {
-  const ha = crypto.createHash("sha256").update(String(a), "utf8").digest();
-  const hb = crypto.createHash("sha256").update(String(b), "utf8").digest();
-  return crypto.timingSafeEqual(ha, hb);
-}
-
-function verifyToken(token, secret) {
-  if (typeof token !== "string") return false;
-  const dot = token.lastIndexOf(".");
-  if (dot <= 0) return false;
-  const expires = token.slice(0, dot);
-  const signature = token.slice(dot + 1);
-  if (!/^\d+$/.test(expires)) return false;
-  if (!/^[a-f0-9]{64}$/.test(signature)) return false;
-  const expected = crypto.createHmac("sha256", secret).update(expires).digest("hex");
-  if (!safeCompare(signature, expected)) return false;
-  return Date.now() < Number(expires);
-}
-
-function applySecurityHeaders(res) {
-  res.setHeader("X-Content-Type-Options", "nosniff");
-  res.setHeader("X-Frame-Options", "DENY");
-  res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate");
-  res.setHeader("Referrer-Policy", "no-referrer");
-}
-
-// ── Handler ──
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 export default async function handler(req, res) {
   applySecurityHeaders(res);
@@ -49,31 +26,67 @@ export default async function handler(req, res) {
     return res.status(503).json({ error: "CV service unavailable" });
   }
 
-  const secret = process.env.CV_TOKEN_SECRET || `cv-token::${configuredPassword}`;
+  const secret =
+    process.env.CV_TOKEN_SECRET ||
+    `cv-token::${configuredPassword}`;
+
+  // Validate token from query string
   const token = req.query?.token;
   if (typeof token !== "string" || !verifyToken(token, secret)) {
     return res.status(401).json({ error: "Access denied or link expired" });
   }
 
-  const cvPath = path.join(process.cwd(), "private", "cv.pdf");
-  let stat;
-  try {
-    stat = fs.statSync(cvPath);
-  } catch {
-    return res.status(404).json({ error: "CV not found" });
+  // Check candidate folders (private/ at root or relative to function)
+  const candidateDirs = [
+    path.join(process.cwd(), "private"),
+    path.resolve(__dirname, "../../private"),
+  ];
+
+  let cvPath = null;
+  for (const dir of candidateDirs) {
+    try {
+      // First check exact "cv.pdf"
+      const exactPath = path.join(dir, "cv.pdf");
+      if (fs.existsSync(exactPath) && fs.statSync(exactPath).isFile()) {
+        cvPath = exactPath;
+        break;
+      }
+      // Fallback: check case-insensitively for any PDF in private/ (e.g. CV.pdf, resume.pdf)
+      const files = fs.readdirSync(dir);
+      const pdfFile = files.find((f) => f.toLowerCase().endsWith(".pdf"));
+      if (pdfFile) {
+        cvPath = path.join(dir, pdfFile);
+        break;
+      }
+    } catch {
+      // try next directory
+    }
   }
 
-  res.setHeader("Content-Type", "application/pdf");
-  res.setHeader("Content-Length", String(stat.size));
-  res.setHeader("Content-Disposition", 'attachment; filename="Ayomide-Emmanuel-CV.pdf"');
+  if (!cvPath) {
+    return res.status(404).json({
+      error: "CV file not found inside private/ folder on server (place cv.pdf in private/cv.pdf)",
+    });
+  }
 
-  const stream = fs.createReadStream(cvPath);
-  stream.on("error", () => {
-    if (!res.headersSent) {
-      res.status(500).json({ error: "Unable to read CV" });
-    } else {
-      res.end();
+  try {
+    const buffer = fs.readFileSync(cvPath);
+    const filename = path.basename(cvPath);
+
+    res.setHeader("Content-Type", "application/pdf");
+    res.setHeader("Content-Length", String(buffer.length));
+    res.setHeader(
+      "Content-Disposition",
+      `attachment; filename="Ayomide-Emmanuel-${filename}"`
+    );
+
+    res.statusCode = 200;
+    if (typeof res.send === "function") {
+      return res.send(buffer);
     }
-  });
-  stream.pipe(res);
+    return res.end(buffer);
+  } catch (err) {
+    console.error("Error reading PDF file:", err);
+    return res.status(500).json({ error: "Unable to read CV file" });
+  }
 }
