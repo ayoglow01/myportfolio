@@ -2,7 +2,8 @@ import { useState, useEffect, useCallback, memo } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { FiMenu, FiX, FiSun, FiMoon, FiDownload } from "react-icons/fi";
-import { navLinks, personalInfo } from "../../data/portfolio";
+import CVDownloadButton from "../common/CVDownloadButton";
+import { navLinks } from "../../data/portfolio";
 import { useScrollDirection } from "../../hooks/useScrollDirection";
 import { useTheme } from "../../hooks/useTheme";
 import Container from "../common/Container";
@@ -48,7 +49,7 @@ function Navbar() {
           }
         });
       },
-      { rootMargin: "-40% 0px -40% 0px" },
+      { rootMargin: "-40% 0px -40% 0px" }
     );
 
     navLinks.forEach((link) => {
@@ -63,7 +64,7 @@ function Navbar() {
   const handleNavClick = useCallback(
     (link) => {
       setMobileOpen(false);
-
+      
       if (isHome) {
         const el = document.getElementById(link.to);
         if (el) {
@@ -80,7 +81,7 @@ function Navbar() {
         }, 150);
       }
     },
-    [isHome, navigate],
+    [isHome, navigate]
   );
 
   const isHidden = scrollDirection === "down" && scrollY > 100 && !mobileOpen;
@@ -111,13 +112,10 @@ function Navbar() {
               className="flex items-center gap-2 group shrink-0"
               aria-label="Go to homepage"
             >
-              <img
-                src="/favicon.svg"
-                alt="Ayomide Logo"
-                className="w-9 h-9 rounded-lg object-cover transition-transform duration-300 group-hover:scale-105"
-              />
-
-              <span className="font-bold text-lg hover:text-primary transition-colors">
+              <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-primary flex items-center justify-center text-white font-bold text-xs sm:text-sm">
+                AE
+              </div>
+              <span className="font-bold text-base sm:text-lg dark:text-text text-text-light group-hover:text-primary transition-colors hidden sm:block">
                 Ayomide<span className="text-primary">.</span>
               </span>
             </Link>
@@ -147,26 +145,20 @@ function Navbar() {
               <button
                 onClick={toggleTheme}
                 className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl dark:bg-surface bg-card-light border dark:border-border border-border-light flex items-center justify-center dark:text-muted text-muted-light hover:text-primary dark:hover:text-primary transition-all cursor-pointer"
-                aria-label={
-                  isDark ? "Switch to light mode" : "Switch to dark mode"
-                }
+                aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
               >
-                {isDark ? (
-                  <FiSun className="text-base sm:text-lg" />
-                ) : (
-                  <FiMoon className="text-base sm:text-lg" />
-                )}
+                {isDark ? <FiSun className="text-base sm:text-lg" /> : <FiMoon className="text-base sm:text-lg" />}
               </button>
 
-              {/* Resume Button - Desktop */}
-              <a
-                href={personalInfo.resumeUrl}
-                className="hidden lg:inline-flex items-center gap-2 px-4 py-2 bg-primary hover:bg-primary-hover text-white rounded-xl text-sm font-semibold transition-all"
+              {/* Resume Button - Desktop (password protected) */}
+              <CVDownloadButton
+                plain
+                icon={<FiDownload />}
+                className="hidden lg:inline-flex items-center gap-2 px-4 py-2 bg-primary hover:bg-primary-hover text-white rounded-xl text-sm font-semibold transition-all cursor-pointer"
                 aria-label="Download Resume"
               >
-                <FiDownload />
                 Resume
-              </a>
+              </CVDownloadButton>
 
               {/* Mobile Menu Button */}
               <button
@@ -264,18 +256,24 @@ function Navbar() {
                   </Link>
                 </motion.div>
 
-                {/* Resume Button */}
-                <motion.a
-                  href={personalInfo.resumeUrl}
-                  className="mt-4 flex items-center justify-center gap-2 px-4 py-3 bg-primary hover:bg-primary-hover text-white rounded-xl text-base font-semibold transition-all"
+                {/* Resume Button (password protected) */}
+                <motion.div
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.3 }}
-                  aria-label="Download Resume"
+                  className="mt-4"
                 >
-                  <FiDownload />
-                  Download Resume
-                </motion.a>
+                  <CVDownloadButton
+                    plain
+                    icon={<FiDownload />}
+                    className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-primary hover:bg-primary-hover text-white rounded-xl text-base font-semibold transition-all cursor-pointer"
+                    aria-label="Download Resume"
+                    aria-haspopup="dialog"
+                    onOpen={() => setMobileOpen(false)}
+                  >
+                    Download Resume
+                  </CVDownloadButton>
+                </motion.div>
               </div>
             </motion.div>
           </>

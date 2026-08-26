@@ -11,15 +11,15 @@ export const personalInfo = {
   ],
   description:
     "I craft modern, performant, and accessible web applications with clean code and intuitive user experiences. Passionate about turning complex problems into elegant solutions.",
-  email: "akinola578ayo@gmail.com",
+  email: "akinolayomidee@gmail.com",
   phone: "+234 915 752 9504",
   location: "Lagos, Nigeria",
-  resumeUrl: "/images/cv.pdf",
+  cvProtected: true,
   profileImage: "/images/profile.jpg",
   socials: {
     github: "https://github.com/ayoglow01",
     linkedin: "https://www.linkedIn.com/in/akinola-ayomide-3547123ba",
-    email: "mailto:akinola578ayo@gmail.com",
+    email: "mailto:akinolayomidee@gmail.com",
     whatsapp: "https://wa.me/2349157529504",
   },
 };

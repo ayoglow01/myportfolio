@@ -1,0 +1,14 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "functions": {
+    "api/cv/*.js": {
+      "includeFiles": "private/**"
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/((?!api/|src/|node_modules/|@.*|.*\\..*).*)",
+      "destination": "/index.html"
+    }
+  ]
+}
