@@ -10,7 +10,7 @@ function HeroContent() {
     <div className="flex flex-col gap-6">
       {/* Greeting */}
       <motion.p
-        className="text-primary font-semibold text-lg"
+        className="text-secondary font-semibold text-lg"
         initial={{ opacity: 0, x: -20 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ delay: 0.2, duration: 0.5 }}
@@ -35,7 +35,7 @@ function HeroContent() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.5, duration: 0.5 }}
       >
-        <span className="dark:text-muted text-muted-light">I&apos;m a </span>
+        <span className="dark:text-muted text-muted-light">I&apos;m </span>
         <span className="text-secondary">
           <Typewriter
             words={personalInfo.roles}

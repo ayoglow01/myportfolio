@@ -112,9 +112,11 @@ function Navbar() {
               className="flex items-center gap-2 group shrink-0"
               aria-label="Go to homepage"
             >
-              <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-primary flex items-center justify-center text-white font-bold text-xs sm:text-sm">
-                AE
-              </div>
+              <img
+                  src="/favicon.svg"
+                  alt="Ayomide Logo"
+                  className="w-8 h-8 rounded-lg object-cover transition-transform duration-300 group-hover:scale-105"
+                />
               <span className="font-bold text-base sm:text-lg dark:text-text text-text-light group-hover:text-primary transition-colors hidden sm:block">
                 Ayomide<span className="text-primary">.</span>
               </span>
